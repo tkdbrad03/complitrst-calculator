@@ -175,7 +175,7 @@
         
         .highlight {
             background: #FFF3E0;
-color: #333;
+            color: #333;
             padding: 20px;
             border-radius: 10px;
             border-left: 5px solid #FF9800;
@@ -329,10 +329,12 @@ color: #333;
             const reputationCost = Math.round(8000 * multiplier);
             
             const totalRisk = directFines + staffTime + legalFees + adminBurden + revenueLoss + reputationCost;
-            const CompliTrst™ Cost = 5328; // $444 * 12 + $322
-            const savings = totalRisk - CompliTrst™ Cost;
-            const roi = Math.round((savings / CompliTrst™ Cost) * 100);
-            const paybackMonths = (CompliTrst™ Cost / (totalRisk / 12)).toFixed(1);
+
+            // ✅ FIXED: valid JS variable name
+            const compliTrstCost = 5328; // $444 * 12 + $322
+            const savings = totalRisk - compliTrstCost;
+            const roi = Math.round((savings / compliTrstCost) * 100);
+            const paybackMonths = (compliTrstCost / (totalRisk / 12)).toFixed(1);
             
             // Update display
             document.getElementById('directFines').textContent = `$${directFines.toLocaleString()}`;
@@ -348,8 +350,8 @@ color: #333;
             document.getElementById('paybackPeriod').textContent = `CompliTrst™ pays for itself in just ${paybackMonths} months!`;
         }
         
-        // Initialize EmailJS (you'll need to replace with your actual keys)
-        emailjs.init("lj17GoHoE6q-CpOhw"); // Get this from EmailJS dashboard
+        // Initialize EmailJS
+        emailjs.init("lj17GoHoE6q-CpOhw"); // your public key
         
         function generateReport() {
             const { jsPDF } = window.jspdf;
@@ -484,5 +486,3 @@ color: #333;
     </script>
 </body>
 </html>
-
-
