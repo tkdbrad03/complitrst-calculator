@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CompliTrst™ ROI Calculator</title>
+  <meta name="description" content="Estimate AHCA violation risk and ROI with CompliTrst™ for Assisted Living Facilities." />
+  <style>
+    :root{
+      --green:#2E7D32;        /* primary */
+      --green-accent:#4CAF50; /* accent/CTA */
+      --green-dark:#388E3C;   /* hover */
+      --bg:#f4f4f4;
+      --text:#212121;
+      --muted:#666;
+      --warning:#f44336;
+      --highlight:#C8E6C9;
+      --savings:#FFEB3B;
+      --card:#ffffff;
+      --line:#e0e0e0;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
+      background:var(--bg); color:var(--text);
+    }
+    .wrap{max-width:960px; margin:0 auto; padding:24px}
+    .card{
+      background:var(--card); border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.08); overflow:hidden;
+    }
+    header{background:var(--green); color:#fff; text-align:center; padding:44px 24px}
+    header h1{margin:0 0 8px; font-size:clamp(26px,3.2vw,36px); font-weight:800}
+    header p{margin:0; opacity:.95}
+
+    main{padding:28px}
+    .section{background:#f9f9f9; border-radius:12px; padding:22px; margin-bottom:22px}
+    .title{
+      color:var(--green); font-size:22px; font-weight:800; margin:0 0 16px;
+      border-bottom:3px solid var(--green-accent); padding-bottom:8px;
+    }
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+    @media (max-width:768px){ .row{grid-template-columns:1fr} }
+
+    label{display:block; font-weight:700; margin:0 0 8px}
+    select{
+      width:100%; padding:12px; border:2px solid #ddd; border-radius:10px; font-size:16px; background:#fff;
+      transition:border-color .2s ease;
+    }
+    select:focus{outline:none; border-color:var(--green-accent)}
+
+    .costs{margin-top:6px}
+    .cost{display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line)}
+    .cost.total{border-bottom:none; padding-top:18px; border-top:2px solid var(--green-accent); font-weight:800}
+
+    .val{font-weight:800; color:var(--warning)}
+    .results{
+      background:var(--green); color:#fff; border-radius:12px; padding:26px; text-align:center; margin-top:24px;
+    }
+    .results h2{margin:0 0 8px; font-size:24px}
+    .compare{
+      background:#fff; color:#333; border-radius:10px; padding:16px; margin:16px 0;
+      display:grid; grid-template-columns:1fr 1fr; gap:14px; text-align:left;
+    }
+    @media (max-width:768px){ .compare{grid-template-columns:1fr} }
+    .box{padding:14px; border-radius:8px}
+    .danger{background:#ffebee; border-left:4px solid #f44336}
+    .success{background:#e8f5e9; border-left:4px solid var(--green-accent)}
+    .big{font-size:22px; font-weight:900; margin:6px 0}
+    .red{color:#f44336} .green{color:var(--green)}
+
+    .savings{font-size:42px; font-weight:900; color:var(--savings); margin:12px 0 6px}
+    .sub{margin:0 0 10px; opacity:.95}
+
+    .highlight{
+      background:var(--highlight); color:var(--green);
+      padding:16px; border-radius:10px; font-weight:800; margin:14px 0 6px;
+    }
+
+    .cta{
+      appearance:none; border:none; border-radius:999px; cursor:pointer;
+      background:var(--green-accent); color:#fff; font-weight:800; font-size:16px;
+      padding:14px 28px; transition:background .2s ease, transform .05s ease; margin-top:14px;
+    }
+    .cta:hover{background:var(--green-dark)}
+    .cta:active{transform:translateY(1px)}
+    .muted{color:var(--muted); font-size:13px; margin-top:8px}
+    footer{padding:18px; text-align:center; color:#777}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <h1>CompliTrst™ ROI Calculator</h1>
+        <p>See how much CompliTrst™ saves your facility from AHCA violations</p>
+      </header>
+
+      <main>
+        <!-- Facility inputs -->
+        <section class="section">
+          <h2 class="title">🏥 Facility Information</h2>
+          <div class="row">
+            <div>
+              <label for="facilitySize">Facility Size</label>
+              <select id="facilitySize" onchange="calculate()">
+                <option value="20">Small (6–20 beds)</option>
+                <option value="50">Medium (20–50 beds)</option>
+                <option value="100" selected>Large (50–100 beds)</option>
+                <option value="150">Extra Large (100+ beds)</option>
+              </select>
+            </div>
+            <div>
+              <label for="riskLevel">Risk Level</label>
+              <select id="riskLevel" onchange="calculate()">
+                <option value="low">Low Risk (New facility)</option>
+                <option value="medium" selected>Medium Risk (Established)</option>
+                <option value="high">High Risk (Recent violations)</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Cost breakdown -->
+        <section class="section">
+          <h2 class="title">💰 True Cost of AHCA Violations</h2>
+          <div class="costs">
+            <div class="cost"><span>Direct AHCA Fines</span><span class="val" id="directFines">$2,500</span></div>
+            <div class="cost"><span>Staff Time (Corrective Action Plans)</span><span class="val" id="staffTime">$3,200</span></div>
+            <div class="cost"><span>Legal/Consultant Fees</span><span class="val" id="legalFees">$4,500</span></div>
+            <div class="cost"><span>Administrative Burden</span><span class="val" id="adminBurden">$1,800</span></div>
+            <div class="cost"><span>Potential Revenue Loss (Moratorium)</span><span class="val" id="revenueLoss">$15,000</span></div>
+            <div class="cost"><span>Reputation Damage</span><span class="val" id="reputationCost">$8,000</span></div>
+            <div class="cost total"><span><strong>Total Annual Risk Cost</strong></span><span class="val" id="totalRisk">$35,000</span></div>
+          </div>
+        </section>
+
+        <!-- Results -->
+        <section class="results">
+          <h2>💡 Your CompliTrst™ Savings</h2>
+
+          <div class="compare">
+            <div class="box danger">
+              <h3>❌ Without CompliTrst™</h3>
+              <p><strong>Annual Risk Cost:</strong></p>
+              <p class="big red" id="annualRisk">$35,000</p>
+            </div>
+            <div class="box success">
+              <h3>✅ With CompliTrst™</h3>
+              <p><strong>Annual Investment:</strong></p>
+              <p class="big green">$5,328</p>
+              <p><small>($444/month + $322 setup)</small></p>
+            </div>
+          </div>
+
+          <div class="savings" id="totalSavings">$29,672</div>
+          <p class="sub">Estimated Annual Savings</p>
+
+          <div class="highlight">
+            🎯 ROI: <span id="roiPercent">557%</span><br />
+            CompliTrst™ pays for itself in just <span id="paybackPeriod">2.2</span> months!
+          </div>
+
+          <!-- Update this link to Calendly or a form -->
+          <button class="cta" onclick="window.location.href='/contact'">📞 Book a Free Strategy Call</button>
+          <div class="muted">Prefer email? <a href="mailto:support@getcomplitrst.com" style="color:#fff; text-decoration:underline;">Contact us</a></div>
+        </section>
+      </main>
+
+      <footer>© <span id="year"></span> CompliTrst™ • All rights reserved</footer>
+    </div>
+  </div>
+
+  <script>
+    const annualInvestment = 5328;
+
+    function calculate(){
+      const size = parseInt(document.getElementById('facilitySize').value, 10);
+      const risk = document.getElementById('riskLevel').value;
+
+      // size multiplier
+      let base = 1;
+      if(size <= 20) base = 0.6;
+      else if(size <= 50) base = 0.8;
+      else if(size <= 100) base = 1.0;
+      else base = 1.3;
+
+      // risk multiplier
+      const riskM = risk === 'low' ? 0.7 : risk === 'medium' ? 1.0 : 1.4;
+      const m = base * riskM;
+
+      const directFines   = Math.round(2500 * m);
+      const staffTime     = Math.round(3200 * m);
+      const legalFees     = Math.round(4500 * m);
+      const adminBurden   = Math.round(1800 * m);
+      const revenueLoss   = Math.round(15000 * m);
+      const reputation    = Math.round(8000 * m);
+
+      const totalRisk = directFines + staffTime + legalFees + adminBurden + revenueLoss + reputation;
+      const savings   = totalRisk - annualInvestment;
+      const roi       = Math.max(0, Math.round((savings / annualInvestment) * 100));
+      const payback   = (annualInvestment / (totalRisk / 12));
+      const paybackSafe = Number.isFinite(payback) ? payback.toFixed(1) : "—";
+
+      // Update UI
+      document.getElementById('directFines').textContent   = `$${directFines.toLocaleString()}`;
+      document.getElementById('staffTime').textContent     = `$${staffTime.toLocaleString()}`;
+      document.getElementById('legalFees').textContent     = `$${legalFees.toLocaleString()}`;
+      document.getElementById('adminBurden').textContent   = `$${adminBurden.toLocaleString()}`;
+      document.getElementById('revenueLoss').textContent   = `$${revenueLoss.toLocaleString()}`;
+      document.getElementById('reputationCost').textContent= `$${reputation.toLocaleString()}`;
+      document.getElementById('totalRisk').textContent     = `$${totalRisk.toLocaleString()}`;
+      document.getElementById('annualRisk').textContent    = `$${totalRisk.toLocaleString()}`;
+      document.getElementById('totalSavings').textContent  = `$${Math.max(0, savings).toLocaleString()}`;
+      document.getElementById('roiPercent').textContent    = `${roi}%`;
+      document.getElementById('paybackPeriod').textContent = paybackSafe;
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    calculate();
+  </script>
+</body>
+</html>
