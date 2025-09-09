@@ -29,7 +29,6 @@
             text-align: center;
         }
 
-        /* 👇 added for the page logo */
         .brand-logo {
             height: 56px;
             display: block;
@@ -205,33 +204,38 @@
         .cta-button:hover {
             transform: translateY(-2px);
         }
-        /* ===== Footer ===== */
-.site-footer{
-  background: #2E7D32;
-  color:#fff;
-  text-align:center;
-  padding:22px;
-}
-.site-footer a{ color:#FFEB3B; text-decoration:none }
-.site-footer a:hover{ text-decoration:underline }
-.footer-logo{
-  height:40px;
-  display:block;
-  margin:0 auto 10px;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,.2));
-}
-.footer-legal{
-  margin-top:8px;
-  opacity:.9;
-  font-size:.95rem;
-}
 
+        /* ----------------------------- */
+        /* 📱 Mobile optimization only   */
+        /* ----------------------------- */
+        @media (max-width: 640px) {
+          .container { border-radius: 14px; }
+          .header { padding: 28px 16px; }
+          .brand-logo { height: 44px; margin-bottom: 10px; }
+          .header h1 { font-size: 2rem; }
+          .header p { font-size: .98rem; }
+
+          .content { padding: 16px; }
+          .calculator-section { padding: 18px; margin-bottom: 18px; }
+
+          /* iOS zoom prevention on selects/inputs */
+          .input-group input, .input-group select { font-size: 16px; }
+
+          /* Comparison table becomes single column */
+          .comparison-table { grid-template-columns: 1fr; gap: 12px; padding: 16px; }
+
+          /* Big number scales better on small screens */
+          .savings-amount { font-size: 2.4rem; }
+
+          /* Full-width CTA for thumb reach */
+          .cta-button { width: 100%; padding: 14px 18px; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <!-- 👇 added page logo -->
+            <!-- page logo -->
             <img 
               src="https://raw.githubusercontent.com/tkdbrad03/complitrst-assets/main/complitrst-logo_transparent.png" 
               alt="CompliTrst logo" 
@@ -327,26 +331,12 @@
                 </button>
             </div>
         </div>
-        <footer class="site-footer">
-  <img
-    class="footer-logo"
-    src="https://raw.githubusercontent.com/tkdbrad03/complitrst-assets/main/complitrst-logo_transparent.png"
-    alt="CompliTrst logo">
-  <div>Compliance made simple for Assisted Living Facilities.</div>
-  <div>
-    Contact: Dr. Tasha McCray ·
-    <a href="mailto:support@complitrst.com">support@complitrst.com</a> ·
-    <a href="https://www.complitrst.com" target="_blank" rel="noopener">complitrst.com</a>
-  </div>
-  <div class="footer-legal">© <span id="footerYear"></span> CompliTrst™. All rights reserved.</div>
-</footer>
-
     </div>
    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        /* 👇 added: preload logo for PDF (uses your GitHub raw PNG) */
+        /* preload logo for PDF (uses your GitHub raw PNG) */
         const LOGO_URL = "https://raw.githubusercontent.com/tkdbrad03/complitrst-assets/main/complitrst-logo_transparent.png";
         const pdfLogoImg = new Image();
         pdfLogoImg.crossOrigin = "anonymous";
@@ -355,40 +345,35 @@
         function calculateROI() {
             const facilitySize = parseInt(document.getElementById('facilitySize').value);
             const riskLevel = document.getElementById('riskLevel').value;
-            
-            // Base costs that scale with facility size and risk
+
             let baseMultiplier = 1;
             let riskMultiplier = 1;
-            
-            // Facility size multiplier
+
             if (facilitySize <= 20) baseMultiplier = 0.6;
             else if (facilitySize <= 50) baseMultiplier = 0.8;
             else if (facilitySize <= 100) baseMultiplier = 1.0;
             else baseMultiplier = 1.3;
-            
-            // Risk level multiplier
+
             if (riskLevel === 'low') riskMultiplier = 0.7;
             else if (riskLevel === 'medium') riskMultiplier = 1.0;
             else riskMultiplier = 1.4;
-            
+
             const multiplier = baseMultiplier * riskMultiplier;
-            
-            // Calculate costs
+
             const directFines = Math.round(2500 * multiplier);
             const staffTime = Math.round(3200 * multiplier);
             const legalFees = Math.round(4500 * multiplier);
             const adminBurden = Math.round(1800 * multiplier);
             const revenueLoss = Math.round(15000 * multiplier);
             const reputationCost = Math.round(8000 * multiplier);
-            
+
             const totalRisk = directFines + staffTime + legalFees + adminBurden + revenueLoss + reputationCost;
 
             const compliTrstCost = 5328; // $444 * 12 + $322
             const savings = totalRisk - compliTrstCost;
             const roi = Math.round((savings / compliTrstCost) * 100);
             const paybackMonths = (compliTrstCost / (totalRisk / 12)).toFixed(1);
-            
-            // Update display
+
             document.getElementById('directFines').textContent = `$${directFines.toLocaleString()}`;
             document.getElementById('staffTime').textContent = `$${staffTime.toLocaleString()}`;
             document.getElementById('legalFees').textContent = `$${legalFees.toLocaleString()}`;
@@ -403,17 +388,15 @@
         }
         
         // Initialize EmailJS
-        emailjs.init("lj17GoHoE6q-CpOhw"); // your public key
+        emailjs.init("lj17GoHoE6q-CpOhw");
         
         function generateReport() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Green header bar
             doc.setFillColor(46, 125, 50);
             doc.rect(0, 0, 210, 40, 'F');
 
-            /* 👇 added: draw logo in the PDF header (top-right) */
             try {
               if (pdfLogoImg.complete && pdfLogoImg.naturalWidth) {
                 const c = document.createElement('canvas');
@@ -422,27 +405,23 @@
                 const ctx = c.getContext('2d');
                 ctx.drawImage(pdfLogoImg, 0, 0);
                 const logoDataUrl = c.toDataURL('image/png');
-                // x, y, width, height
                 doc.addImage(logoDataUrl, 'PNG', 172, 7, 28, 28);
               }
             } catch (e) {
               console.warn('PDF logo skipped:', e);
             }
             
-            // Get current values
             const facilitySize = document.getElementById('facilitySize').value;
             const riskLevel = document.getElementById('riskLevel').value;
             const totalSavings = document.getElementById('totalSavings').textContent;
             const roiPercent = document.getElementById('roiPercent').textContent;
             const annualRisk = document.getElementById('annualRisk').textContent;
-            
-            // Get user info for email
+
             const facilityName = prompt('Enter your facility name:') || 'Unnamed Facility';
             const userEmail = prompt('Enter your email to receive a copy:') || '';
             const userName = prompt('Enter your name:') || '';
             const userPhone = prompt('Enter your phone number (optional):') || '';
             
-            // Title text over header
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(24);
             doc.setFont('helvetica', 'bold');
@@ -452,10 +431,7 @@
             doc.setFont('helvetica', 'normal');
             doc.text('Professional Compliance Solution for Assisted Living Facilities', 20, 32);
             
-            // Reset color for body
             doc.setTextColor(0, 0, 0);
-            
-            // Facility Information
             doc.setFontSize(16);
             doc.setFont('helvetica', 'bold');
             doc.text('Facility Analysis', 20, 60);
@@ -468,7 +444,6 @@
             doc.text(`Risk Level: ${riskLevel}`, 20, 105);
             doc.text(`Analysis Date: ${new Date().toLocaleDateString()}`, 20, 115);
             
-            // Financial Summary
             doc.setFontSize(16);
             doc.setFont('helvetica', 'bold');
             doc.text('Financial Impact Summary', 20, 140);
@@ -480,7 +455,6 @@
             doc.text(`Estimated Annual Savings: ${totalSavings}`, 20, 175);
             doc.text(`Return on Investment: ${roiPercent}`, 20, 185);
             
-            // Benefits Section
             doc.setFontSize(16);
             doc.setFont('helvetica', 'bold');
             doc.text('CompliTrst™ Benefits', 20, 210);
@@ -503,20 +477,15 @@
                 yPosition += 8;
             });
             
-            // Footer
             doc.setFontSize(10);
             doc.setTextColor(100, 100, 100);
             doc.text('Generated by CompliTrst™ ROI Calculator', 20, 280);
             doc.text('Contact: Dr. Tasha McCray, PhD, MSN,Ed., RN', 20, 287);
             doc.text('Email: support@complitrst.com | Website: complitrst.com', 20, 294);
             
-            // Generate PDF as base64 for email
             const pdfData = doc.output('datauristring');
-            
-            // Download PDF locally
             doc.save(`CompliTrst-ROI-Analysis-${facilityName.replace(/\s+/g, '-')}.pdf`);
             
-            // Send email notification
             if (userEmail && typeof emailjs !== 'undefined') {
                 const emailParams = {
                     facility_name: facilityName,
@@ -532,7 +501,6 @@
                     message: `New ROI analysis generated for ${facilityName}. Contact details: ${userName} (${userEmail}) ${userPhone}`
                 };
                 
-                // Send email to yourself (lead notification)
                 emailjs.send('service_3poivuj', 'template_y43ufhr', emailParams)
                     .then(() => {
                         alert('PDF generated and lead notification sent! We\'ll contact you soon.');
@@ -551,8 +519,6 @@
         
         // Initialize calculation
         calculateROI();
-        document.getElementById('footerYear').textContent = new Date().getFullYear();
-
     </script>
 </body>
 </html>
