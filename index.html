@@ -518,8 +518,21 @@
             doc.text('Contact: Dr. Tasha McCray, PhD, MSN,Ed., RN', 20, 287);
             doc.text('Email: support@complitrst.com | Website: complitrst.com', 20, 294);
             
-            const pdfData = doc.output('datauristring');
-            doc.save(`CompliTrst-ROI-Analysis-${facilityName.replace(/\s+/g, '-')}.pdf`);
+            const filename = `CompliTrst-ROI-Analysis-${facilityName.replace(/\s+/g, '-')}.pdf`;
+
+// keep data URL if you use it for emailing later
+const pdfData = doc.output('datauristring');
+
+// mobile = open PDF in a new tab so user can save via Share sheet
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+if (isMobile) {
+  const blobUrl = doc.output('bloburl');   // creates a blob URL
+  window.open(blobUrl, '_blank');          // opens viewer on mobile
+} else {
+  doc.save(filename);                       // normal desktop download
+}
+
+
             
             if (userEmail && typeof emailjs !== 'undefined') {
                 const emailParams = {
