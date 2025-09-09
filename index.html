@@ -230,6 +230,27 @@
           /* Full-width CTA for thumb reach */
           .cta-button { width: 100%; padding: 14px 18px; }
         }
+        /* ===== Footer ===== */
+.site-footer{
+  background:#2E7D32;
+  color:#fff;
+  text-align:center;
+  padding:22px;
+}
+.site-footer a{ color:#FFEB3B; text-decoration:none }
+.site-footer a:hover{ text-decoration:underline }
+.footer-logo{
+  height:40px;
+  display:block;
+  margin:0 auto 10px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.2));
+}
+.footer-legal{
+  margin-top:8px;
+  opacity:.9;
+  font-size:.95rem;
+}
+
     </style>
 </head>
 <body>
@@ -246,7 +267,7 @@
         
         <div class="content">
             <div class="calculator-section">
-                <h2 class="section-title">🏥 Facility Information</h2>
+                <h2 class="section-title">Facility Information</h2>
                 <div class="row">
                     <div class="input-group">
                         <label>Facility Size</label>
@@ -269,7 +290,7 @@
             </div>
             
             <div class="calculator-section">
-                <h2 class="section-title">💰 True Cost of AHCA Violations</h2>
+                <h2 class="section-title">True Cost of AHCA Violations</h2>
                 <div id="violationCosts">
                     <div class="cost-item">
                         <span>Direct AHCA Fines</span>
@@ -303,7 +324,7 @@
             </div>
             
             <div class="results">
-                <h2>💡 Your CompliTrst™  Savings</h2>
+                <h2>Your CompliTrst™  Savings</h2>
                 <div class="comparison-table">
                     <div class="comparison-item violation-cost">
                         <h3>❌ Without CompliTrst™ </h3>
@@ -322,7 +343,7 @@
                 <p style="font-size: 1.2rem;">Estimated Annual Savings</p>
                 
                 <div class="highlight">
-                    <strong>🎯 ROI: <span id="roiPercent">557%</span></strong><br>
+                    <strong> ROI: <span id="roiPercent">557%</span></strong><br>
                     <span id="paybackPeriod">CompliTrst™  pays for itself in just 2.2 months!</span>
                 </div>
                 
@@ -331,6 +352,20 @@
                 </button>
             </div>
         </div>
+        <footer class="site-footer">
+  <img
+    class="footer-logo"
+    src="https://raw.githubusercontent.com/tkdbrad03/complitrst-assets/main/complitrst-logo_transparent.png"
+    alt="CompliTrst logo">
+  <div>Compliance made simple for Assisted Living Facilities.</div>
+  <div>
+    Contact: Dr. Tasha McCray ·
+    <a href="mailto:support@complitrst.com">support@complitrst.com</a> ·
+    <a href="https://www.complitrst.com" target="_blank" rel="noopener">complitrst.com</a>
+  </div>
+  <div class="footer-legal">© <span id="footerYear"></span> CompliTrst™. All rights reserved.</div>
+</footer>
+
     </div>
    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -519,6 +554,8 @@
         
         // Initialize calculation
         calculateROI();
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+
     </script>
 </body>
 </html>
